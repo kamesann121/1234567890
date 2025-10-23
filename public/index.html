@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>画像連打＋ショップ＋チャット</title>
+<link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div id="leftHeader">
+        <input id="nickname" placeholder="ニックネーム" maxlength="32">
+        <input id="adminToken" placeholder="管理者トークン (admin用)" style="display:none" maxlength="64">
+        <button id="setName">設定</button>
+        <span id="meName"></span>
+      </div>
+      <div id="rightHeader">
+        <div id="coins">コイン: 0</div>
+        <div id="tapValue">1 / タップ</div>
+      </div>
+    </header>
+
+    <main>
+      <section id="game">
+        <div id="playArea">
+          <img id="tapImage" src="https://via.placeholder.com/360x240.png?text=タップしてね" alt="tap" />
+          <div id="tapInfo">
+            <div id="myTaps">タップ数: 0</div>
+            <div>
+              <input type="file" id="iconFile" accept="image/*">
+              <button id="uploadIcon">アイコンアップロード</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="shop">
+          <h3>ショップ</h3>
+          <div id="shopList"></div>
+        </div>
+      </section>
+
+      <section id="chat">
+        <div id="chatLog" class="chatLog"></div>
+        <div class="chatForm">
+          <input id="chatInput" placeholder="メッセージを入力" maxlength="500">
+          <button id="sendChat">送信</button>
+        </div>
+        <h4>ランキング</h4>
+        <ol id="rankList"></ol>
+      </section>
+    </main>
+  </div>
+<script src="main.js"></script>
+</body>
+</html>
