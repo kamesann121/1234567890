@@ -5,7 +5,7 @@ let myIcon = null;
 let shop = [];
 
 const $ = id => document.getElementById(id);
-const nicknameInput = $('nickname'), adminTokenInput = $('adminToken'), setNameBtn = $('setName'), meNameSpan = $('meName');
+const nicknameInput = $('nickname'), setNameBtn = $('setName'), meNameSpan = $('meName');
 const coinsEl = $('coins'), tapValueEl = $('tapValue'), myTapsEl = $('myTaps');
 const tapImage = $('tapImage'), iconFile = $('iconFile'), uploadIconBtn = $('uploadIcon');
 const shopList = $('shopList'), chatLog = $('chatLog'), chatInput = $('chatInput'), sendChatBtn = $('sendChat');
@@ -13,17 +13,12 @@ const rankList = $('rankList');
 
 setNameBtn.onclick = () => {
   const nick = nicknameInput.value.trim();
-  if (!nick) return alert('ニックネームを入力してください');
-  const payload = { type: 'setName', nickname: nick };
-  if (nick.toLowerCase() === 'admin') {
-    const token = prompt('管理者トークンを入力してください');
-    payload.adminToken = token;
-  }
-  ws.send(JSON.stringify(payload));
+  if (!nick) return alert('ニックネームを入力');
+  ws.send(JSON.stringify({ type: 'setName', nickname: nick }));
 };
 
 uploadIconBtn.onclick = async () => {
-  if (!myNickname) return alert('先にニックネームを設定してください');
+  if (!myNickname) return alert('先にニックネームを設定');
   const f = iconFile.files[0];
   if (!f) return alert('ファイルを選んでください');
   const fd = new FormData();
@@ -33,7 +28,7 @@ uploadIconBtn.onclick = async () => {
   const json = await res.json();
   if (json.ok) {
     myIcon = json.icon;
-    appendSystem(`アイコンをアップロードしました`);
+    appendSystem('アイコンをアップロードしました');
   } else {
     appendSystem('アップロード失敗');
   }
@@ -55,7 +50,6 @@ function sendChat() {
   chatInput.value = '';
 }
 
-ws.onopen = () => console.log('ws open');
 ws.onmessage = (ev) => {
   const data = JSON.parse(ev.data);
   if (data.type === 'init') {
@@ -72,32 +66,23 @@ ws.onmessage = (ev) => {
       nicknameInput.value = '';
       appendSystem(`ニックネーム設定: ${myNickname}`);
     } else {
-      if (data.reason === 'inuse') appendSystem('そのニックネームは既に使用中です');
+      if (data.reason === 'inuse') appendSystem('そのニックネームは使用中です');
       else if (data.reason === 'banned') appendSystem('そのニックネームはBANされています');
       else if (data.reason === 'admin_auth') appendSystem('admin認証失敗');
       else appendSystem('ニックネーム設定失敗');
     }
     return;
   }
-  if (data.type === 'shop') { shop = data.shop; renderShop(); return; }
-  if (data.type === 'buyResult') {
-    if (data.ok) appendSystem('購入成功');
-    else appendSystem('購入失敗: ' + (data.reason || ''));
-    return;
-  }
   if (data.type === 'tap') {
-    // someone tapped; update coins/taps for UI if it's me
     if (data.nickname === myNickname) {
       coinsEl.textContent = `コイン: ${data.coins}`;
       myTapsEl.textContent = `タップ数: ${data.taps}`;
       tapValueEl.textContent = `${data.tap_value} / タップ`;
     }
-    // optionally animate
     return;
   }
   if (data.type === 'ranks') {
     renderRanks(data.ranks);
-    renderPlayers(data.players);
     return;
   }
   if (data.type === 'chat') {
@@ -113,6 +98,10 @@ ws.onmessage = (ev) => {
       appendSystem('あなたはBANされました');
       ws.close();
     }
+  }
+  if (data.type === 'buyResult') {
+    appendSystem(data.ok ? '購入成功' : '購入失敗: ' + (data.reason || ''));
+    return;
   }
 };
 
@@ -130,19 +119,15 @@ function renderShop() {
 }
 
 function renderRanks(ranks) {
-  rankList.innerHTML = ranks.map(r => {
-    const icon = r.icon ? `<img src="${r.icon}" alt="">` : `<img src="https://via.placeholder.com/36?text=?" alt="">`;
+  rankList.innerHTML = (ranks || []).map(r => {
+    const icon = r.icon ? `<img src="${r.icon}" alt="">` : `<img src="https://via.placeholder.com/36?text=?">`;
     return `<li class="rank-item">${icon}<div><strong>${escapeHtml(r.nickname)}</strong><div>タップ: ${r.taps} / コイン: ${r.coins}</div></div></li>`;
   }).join('');
 }
 
-function renderPlayers(players) {
-  // no-op for now; ranks show top taps
-}
-
 function renderChats(chats) {
   chatLog.innerHTML = '';
-  chats.forEach(c => addChatMessage(c.nickname, c.icon, c.text, c.ts * 1000));
+  (chats || []).forEach(c => addChatMessage(c.nickname, c.icon, c.text, c.ts * 1000));
 }
 
 function addChatMessage(nick, icon, text, ts) {
