@@ -33,5 +33,3 @@ CREATE TABLE IF NOT EXISTS shop_items (
   type TEXT NOT NULL,
   value INTEGER NOT NULL
 );
-
--- populate shop defaults if empty (handled by server too)
