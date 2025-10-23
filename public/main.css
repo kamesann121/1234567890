@@ -1,0 +1,21 @@
+body { font-family: Arial, sans-serif; margin:0; padding:12px; background:#f4f6f8; color:#222; }
+header { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:12px; }
+#leftHeader { display:flex; gap:8px; align-items:center; }
+#rightHeader { display:flex; gap:12px; align-items:center; }
+main { display:flex; gap:12px; }
+#game { flex:1; display:flex; gap:12px; }
+#playArea { flex:1; background:#fff; padding:12px; border-radius:8px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+#tapImage { width:360px; height:240px; object-fit:cover; border-radius:6px; cursor:pointer; user-select:none; }
+#shop { width:300px; background:#fff; padding:12px; border-radius:8px; }
+#shopList .item { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; }
+#chat { width:380px; display:flex; flex-direction:column; gap:8px; }
+.chatLog { background:#fff; padding:10px; height:420px; overflow:auto; border-radius:8px; }
+.chat-entry { display:flex; gap:8px; margin-bottom:8px; }
+.chat-entry img { width:40px; height:40px; border-radius:50%; object-fit:cover; }
+.chat-entry .meta { font-size:12px; color:#555; }
+.chat-entry .text { font-size:14px; }
+.chatForm { display:flex; gap:8px; }
+button { cursor:pointer; }
+#rankList { background:#fff; padding:10px; border-radius:8px; max-height:300px; overflow:auto; }
+.rank-item { display:flex; gap:8px; align-items:center; padding:6px 0; border-bottom:1px solid #fafafa; }
+.rank-item img { width:36px; height:36px; border-radius:50%; object-fit:cover; }
