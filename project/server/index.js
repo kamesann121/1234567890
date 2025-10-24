@@ -15,8 +15,17 @@ const ICON_DIR = path.join(DATA_DIR, 'icons');
 const DB_PATH = path.join(DATA_DIR, 'db.json');
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'change-me';
 
-fs.mkdirSync(DATA_DIR, { recursive: true });
-fs.mkdirSync(ICON_DIR, { recursive: true });
+try {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+} catch (err) {
+  if (err.code !== 'EEXIST') throw err;
+}
+
+try {
+  fs.mkdirSync(ICON_DIR, { recursive: true });
+} catch (err) {
+  if (err.code !== 'EEXIST') throw err;
+}
 
 const adapter = new JSONFile(DB_PATH);
 const db = new Low(adapter, {}); // ← 初期データを渡すように修正！
