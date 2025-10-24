@@ -19,7 +19,7 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
 if (!fs.existsSync(ICON_DIR)) fs.mkdirSync(ICON_DIR);
 
 const adapter = new JSONFile(DB_PATH);
-const db = new Low(adapter);
+const db = new Low(adapter, {}); // ← 初期データを渡すように修正！
 
 const app = express();
 app.use(express.static(path.join(__dirname, '..', 'public')));
